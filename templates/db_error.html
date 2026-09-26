@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connection Error | SkillSwap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: #ef4444;
+            margin-bottom: 20px;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        h1 {
+            color: #1f2937;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .error-details {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #991b1b;
+        }
+
+        .error-details strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .instructions {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #15803d;
+        }
+
+        .instructions strong {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-icon">
+        <i class="fas fa-database"></i>
+    </div>
+    
+    <h1>Database Connection Error</h1>
+    
+    <p class="error-message">
+        <span class="status-indicator"></span>
+        PostgreSQL server is not running or unreachable
+    </p>
+
+    <div class="error-details">
+        <strong>⚠️ What Happened?</strong>
+        The application tried to connect to the PostgreSQL database but failed. This could mean:
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>PostgreSQL service is not running</li>
+            <li>Database credentials are incorrect</li>
+            <li>Database server is not accessible</li>
+        </ul>
+    </div>
+
+    <div class="instructions">
+        <strong> How to Fix</strong>
+        <ol>
+            <li><strong>Start PostgreSQL Service</strong>
+                <div class="code-block">Start-Service postgresql-x64-15</div>
+                Or use Windows Services (services.msc)
+            </li>
+            <li><strong>Create Database</strong>
+                <div class="code-block">psql -U postgres -c "CREATE DATABASE skillswap_db;"</div>
+            </li>
+            <li><strong>Update .env File</strong>
+                <div style="margin: 10px 0;">Check your .env file with correct credentials:</div>
+                <div class="code-block">DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=skillswap_db
+DB_USER=postgres
+DB_PASSWORD=your_password</div>
+            </li>
+            <li><strong>Restart Application</strong>
+                <div style="margin: 10px 0;">Refresh this page or restart the Flask app</div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" onclick="location.reload();">
+            <i class="fas fa-redo"></i> Retry Connection
+        </button>
+        <a href="/" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Go Home
+        </a>
+    </div>
+
+    <p class="status-text">
+        <i class="fas fa-info-circle"></i>
+        Keep the Flask app running. Once PostgreSQL starts, refresh this page.
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matches</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h2>SkillSwap</h2>
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/skills">Skills</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Matched Users</h2>
+
+    {% if matches %}
+        <div class="grid">
+            {% for m in matches %}
+                <div class="card">
+                    <h3>{{ m.name }}</h3>
+                    <p><b>Skill Offered:</b> {{ m.skill_name }}</p>
+
+                    <div class="card-actions">
+                        <a class="btn" href="/send-request/{{ m.user_id }}/{{ m.skill_name }}">
+                            Send Exchange Request
+                        </a>
+                        <a class="btn btn-outline" href="/send-upgrade-request/{{ m.user_id }}/{{ m.skill_name }}">
+                            Request Skill Upgrade
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No matches found yet.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

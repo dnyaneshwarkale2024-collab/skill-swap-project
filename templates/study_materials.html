@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Study Materials</h1>
+    <p>Access books, articles, theses, and reference materials shared by the community.</p>
+
+    <div class="hero-buttons">
+        <a href="{{ url_for('add_study_material') }}" class="btn">
+            <i class="fas fa-upload"></i> Share Material
+        </a>
+    </div>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- FILTERS -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="type-filter">Type:</label>
+            <select id="type-filter">
+                <option value="">All Types</option>
+                {% for type in material_types %}
+                <option value="{{ type }}">{{ type.title() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- MATERIALS GRID -->
+    <section class="materials-section">
+        <div class="grid">
+            {% for material in materials %}
+            <div class="card material-card" data-type="{{ material.material_type }}" data-category="{{ material.category }}">
+                <div class="card-header">
+                    <h3>{{ material.title }}</h3>
+                    {% if material.author %}
+                    <span class="author">by {{ material.author }}</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p>{{ material.description | truncate(120) }}</p>
+                    <div class="material-meta">
+                        <span class="type">{{ material.material_type.title() }}</span>
+                        {% if material.category %}
+                        <span class="category">{{ material.category }}</span>
+                        {% endif %}
+                        <span class="uploader">Shared by {{ material.uploaded_by_name }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ material.content_url }}" target="_blank" class="btn btn-sm">
+                        {% if material.material_type == 'book' %}
+                            <i class="fas fa-book"></i> Read Book
+                        {% elif material.material_type == 'article' %}
+                            <i class="fas fa-file-alt"></i> Read Article
+                        {% elif material.material_type == 'thesis' %}
+                            <i class="fas fa-graduation-cap"></i> View Thesis
+                        {% elif material.material_type == 'project' %}
+                            <i class="fas fa-folder"></i> View Project
+                        {% else %}
+                            <i class="fas fa-external-link-alt"></i> Access Material
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not materials %}
+        <div class="empty-state">
+            <i class="fas fa-books"></i>
+            <h3>No study materials available yet</h3>
+            <p>Share your knowledge by uploading books, articles, or reference materials!</p>
+            <a href="{{ url_for('add_study_material') }}" class="btn">Share First Material</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+// Filter functionality
+document.getElementById('type-filter').addEventListener('change', filterMaterials);
+document.getElementById('category-filter').addEventListener('change', filterMaterials);
+
+function filterMaterials() {
+    const selectedType = document.getElementById('type-filter').value;
+    const selectedCategory = document.getElementById('category-filter').value;
+    const materialCards = document.querySelectorAll('.material-card');
+
+    materialCards.forEach(card => {
+        const typeMatch = !selectedType || card.dataset.type === selectedType;
+        const categoryMatch = !selectedCategory || card.dataset.category === selectedCategory;
+
+        if (typeMatch && categoryMatch) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <a href="{{ url_for('skill_requests') }}">Skill Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Welcome, {{ name }}</h1>
+    <p>Exchange skills. Learn together. Grow faster.</p>
+
+    <div class="hero-buttons">
+        <a href="{{ url_for('add_skill') }}" class="btn">
+            <i class="fas fa-plus"></i> Add Skills
+        </a>
+        <a href="{{ url_for('matches') }}" class="btn-outline">
+            <i class="fas fa-handshake"></i> Find Matches
+        </a>
+        <a href="{{ url_for('skill_requests') }}" class="btn-outline">
+            <i class="fas fa-search"></i> Browse Requests
+        </a>
+    </div>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<div class="container">
+    
+    <!-- REQUESTS SECTION -->
+    {% if pending_requests %}
+    <section class="requests-section">
+        <h2><i class="fas fa-bell"></i> Pending Requests</h2>
+        <div class="requests-grid">
+            {% for req in pending_requests %}
+            <div class="request-card">
+                <div class="request-header">
+                    <h4>{{ req.name }}</h4>
+                    {% if req.request_type == 'skill' %}
+                        <span class="request-type skill-type">Skill Request</span>
+                    {% elif req.request_type == 'course' %}
+                        <span class="request-type course-type">Course Enrollment</span>
+                    {% elif req.request_type == 'skill_upgrade' %}
+                        <span class="request-type upgrade-type">Skill Upgrade</span>
+                    {% endif %}
+                </div>
+                <div class="request-body">
+                    {% if req.request_type == 'skill' %}
+                        <p><strong>Skill:</strong> {{ req.skill_name }}</p>
+                    {% elif req.request_type == 'course' %}
+                        <p><strong>Course:</strong> {{ req.course_title }}</p>
+                    {% elif req.request_type == 'skill_upgrade' %}
+                        <p><strong>Skill:</strong> {{ req.skill_name }}</p>
+                        <p><strong>Purpose:</strong> Upgrade/Mentorship</p>
+                    {% endif %}
+                </div>
+                <div class="request-actions">
+                    <a href="/update-request/{{ req.id }}/Accepted" class="btn-small accept-btn">
+                        <i class="fas fa-check"></i> Accept
+                    </a>
+                    <a href="/update-request/{{ req.id }}/Rejected" class="btn-small reject-btn">
+                        <i class="fas fa-times"></i> Reject
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="view-all-link">
+            <a href="{{ url_for('requests') }}" class="btn-outline">
+                <i class="fas fa-list"></i> View All Requests
+            </a>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+    {% endif %}
+    
+    <!-- YOUR SKILLS SECTION -->
+    <section class="skills-section">
+        <h2><i class="fas fa-star"></i> Your Skills</h2>
+        {% if skills %}
+        <div class="grid">
+            {% for skill in skills %}
+            <div class="card skill-card">
+                <div class="card-badge {% if skill.skill_type == 'Offer' %}badge-offer{% else %}badge-want{% endif %}">
+                    {{ skill.skill_type }}
+                </div>
+                <h3>{{ skill.skill_name }}</h3>
+                <p class="card-type">{{ skill.skill_type }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>You haven't added any skills yet.</p>
+            <a href="{{ url_for('add_skill') }}" class="btn">Add Your First Skill</a>
+        </div>
+        {% endif %}
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- DISCOVER SKILLS SECTION -->
+    <section class="discover-section">
+        <h2><i class="fas fa-search"></i> Discover Skills</h2>
+        
+        <!-- SEARCH BAR -->
+        <div class="search-container">
+            <form method="GET" action="{{ url_for('dashboard') }}" class="search-form">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        name="search" 
+                        class="search-input" 
+                        placeholder="Search for skills (e.g., Python, Guitar, Spanish)..."
+                        value="{{ search_query }}"
+                    >
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+            {% if search_query %}
+            <div class="search-results-info">
+                <p>Showing results for "<strong>{{ search_query }}</strong>"</p>
+                <a href="{{ url_for('dashboard') }}" class="clear-search">Clear Search</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- COURSES/SKILLS GRID -->
+        {% if available_skills %}
+        <div class="courses-grid">
+            {% for skill in available_skills %}
+            <div class="course-card">
+                <div class="course-header">
+                    <div class="course-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="course-popularity">
+                        <span class="popularity-badge">
+                            <i class="fas fa-users"></i> {{ skill.popularity }} {{ 'person' if skill.popularity == 1 else 'people' }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="course-body">
+                    <h3 class="course-title">{{ skill.skill_name }}</h3>
+                    <p class="course-type">{{ skill.skill_type }}</p>
+                    <p class="course-instructors">
+                        <i class="fas fa-user-circle"></i>
+                        <strong>Offered by:</strong> {{ skill.offered_by_users }}
+                    </p>
+                </div>
+                
+                <div class="course-footer">
+                    <a href="{{ url_for('matches') }}?skill={{ skill.skill_name }}" class="btn-small">
+                        Find Teachers
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            {% if search_query %}
+            <i class="fas fa-search"></i>
+            <p>No skills found matching "<strong>{{ search_query }}</strong>"</p>
+            <p class="small-text">Try searching for different skills or browse all available skills</p>
+            <a href="{{ url_for('dashboard') }}" class="btn">View All Skills</a>
+            {% else %}
+            <i class="fas fa-inbox"></i>
+            <p>No skills available to discover yet</p>
+            <p class="small-text">Be the first to add a skill!</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        <hr>
+
+             <h2>💬 Student Feedback</h2>
+
+               {% if feedbacks %}
+               {% for fb in feedbacks %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+            <b>{{ fb.name }}</b><br>
+            {{ fb.message }}<br>
+            <small>{{ fb.created_at }}</small>
+         </div>
+        {% endfor %}
+       {% else %}
+        <p>No feedback yet</p>
+        {% endif %}
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; All rights reserved by DK 2025-26</p>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Lectures | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Live Lectures</h1>
+    <p>Join interactive live sessions with expert instructors and fellow learners.</p>
+
+    <div class="hero-buttons">
+        <a href="{{ url_for('add_live_lecture') }}" class="btn">
+            <i class="fas fa-calendar-plus"></i> Schedule Lecture
+        </a>
+    </div>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- FILTERS -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- LECTURES LIST -->
+    <section class="lectures-section">
+        {% if lectures %}
+        <div class="lectures-list">
+            {% for lecture in lectures %}
+            <div class="card lecture-card" data-category="{{ lecture.category }}">
+                <div class="card-header">
+                    <h3>{{ lecture.title }}</h3>
+                    <span class="instructor">by {{ lecture.instructor_name }}</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ lecture.description | truncate(150) }}</p>
+                    <div class="lecture-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ lecture.scheduled_time.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ lecture.duration }} minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>Max {{ lecture.max_participants }} participants</span>
+                        </div>
+                        {% if lecture.category %}
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span>{{ lecture.category }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ lecture.meeting_link }}" target="_blank" class="btn btn-sm">
+                        <i class="fas fa-video"></i> Join Lecture
+                    </a>
+                    <span class="lecture-status upcoming">Upcoming</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-video"></i>
+            <h3>No upcoming live lectures</h3>
+            <p>Check back later or schedule your own lecture to share knowledge!</p>
+            <a href="{{ url_for('add_live_lecture') }}" class="btn">Schedule First Lecture</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+// Simple filter functionality
+document.getElementById('category-filter').addEventListener('change', function() {
+    const selectedCategory = this.value;
+    const lectureCards = document.querySelectorAll('.lecture-card');
+
+    lectureCards.forEach(card => {
+        if (!selectedCategory || card.dataset.category === selectedCategory) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

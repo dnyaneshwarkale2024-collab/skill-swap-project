@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Skill Request | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <a href="{{ url_for('skill_requests') }}">Skill Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+    <div class="form-container">
+        <h2><i class="fas fa-plus-circle"></i> Post a Skill Learning Request</h2>
+        <p>Let tutors know what skills you want to learn. They'll be able to find and contact you!</p>
+
+        <form method="POST" class="skill-form">
+            <div class="form-group">
+                <label for="skill_name">Skill Name *</label>
+                <input type="text" id="skill_name" name="skill_name" required
+                       placeholder="e.g., Python, Guitar, Spanish, Photography">
+            </div>
+
+            <div class="form-group">
+                <label for="proficiency_level">Current Proficiency Level</label>
+                <select id="proficiency_level" name="proficiency_level">
+                    <option value="beginner">Beginner - Just starting out</option>
+                    <option value="intermediate">Intermediate - Some experience</option>
+                    <option value="advanced">Advanced - Want to master it</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Optional)</label>
+                <textarea id="description" name="description" rows="4"
+                          placeholder="Tell tutors about your goals, what you already know, or specific areas you want to focus on..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="availability">Availability (Optional)</label>
+                <input type="text" id="availability" name="availability"
+                       placeholder="e.g., Weekends, Evenings, 2 hours/week">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> Post Request
+                </button>
+                <a href="{{ url_for('skill_requests') }}" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Requests
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; © All rights reserved by DK 2025-26</p>
+    </div>
+</footer>
+
+</body>
+</html>

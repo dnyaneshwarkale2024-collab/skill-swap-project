@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Requests | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <a href="{{ url_for('skill_requests') }}">Skill Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Skill Learning Requests</h1>
+    <p>Browse students looking for tutors and offer to teach them your skills.</p>
+
+    <div class="hero-buttons">
+        <a href="{{ url_for('create_skill_request') }}" class="btn">
+            <i class="fas fa-plus"></i> Post Learning Request
+        </a>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- SKILL REQUESTS GRID -->
+    <section class="skill-requests-section">
+        {% if skill_requests %}
+        <div class="grid">
+            {% for req in skill_requests %}
+            <div class="card skill-request-card">
+                <div class="card-header">
+                    <h3>{{ req.skill_name }}</h3>
+                    <span class="proficiency-badge proficiency-{{ req.proficiency_level }}">
+                        {{ req.proficiency_level.title() }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="student-info">
+                        <i class="fas fa-user"></i>
+                        <strong>Student:</strong> {{ req.student_name }}
+                    </p>
+                    {% if req.description %}
+                    <p class="description">{{ req.description }}</p>
+                    {% endif %}
+                    {% if req.availability %}
+                    <p class="availability">
+                        <i class="fas fa-calendar"></i>
+                        <strong>Available:</strong> {{ req.availability }}
+                    </p>
+                    {% endif %}
+                    <p class="posted-date">
+                        <i class="fas fa-clock"></i>
+                        Posted {{ req.created_at.strftime('%B %d, %Y') }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('respond_skill_request', request_id=req.id) }}" class="btn">
+                        <i class="fas fa-handshake"></i> Offer to Teach
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>No skill requests yet</h3>
+            <p>Students haven't posted any learning requests yet. Check back later!</p>
+            <a href="{{ url_for('create_skill_request') }}" class="btn">Be the First to Post</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; All rights reserved by DK 2025-26</p>
+    </div>
+</footer>
+
+</body>
+</html>

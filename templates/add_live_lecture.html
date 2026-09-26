@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Live Lecture | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- FORM SECTION -->
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="fas fa-calendar-plus"></i> Schedule Live Lecture</h1>
+            <p>Host an interactive live session for learners.</p>
+        </div>
+
+        <form method="POST" class="form">
+            <div class="form-group">
+                <label for="title">Lecture Title *</label>
+                <input type="text" id="title" name="title" required
+                       placeholder="Enter lecture title">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" rows="3" required
+                          placeholder="What will be covered in this lecture?"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="scheduled_time">Date & Time *</label>
+                    <input type="datetime-local" id="scheduled_time" name="scheduled_time" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (minutes) *</label>
+                    <input type="number" id="duration" name="duration" min="15" max="480" value="60" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="meeting_link">Meeting Link *</label>
+                <input type="url" id="meeting_link" name="meeting_link" required
+                       placeholder="https://zoom.us/... or https://meet.google.com/...">
+                <small class="form-help">Zoom, Google Meet, or other video conferencing link</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile Development">Mobile Development</option>
+                        <option value="Design">Design</option>
+                        <option value="Business">Business</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Language">Language</option>
+                        <option value="Science">Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="max_participants">Max Participants</label>
+                    <input type="number" id="max_participants" name="max_participants" min="1" max="1000" value="50">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="fas fa-calendar-check"></i> Schedule Lecture
+                </button>
+                <a href="{{ url_for('live_lectures') }}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

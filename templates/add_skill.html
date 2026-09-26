@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Skill</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <h2>Add Skill</h2>
+
+    <form method="POST">
+        <label>Skill Name</label>
+        <input type="text" name="skill_name" required>
+
+        <label>Skill Type</label>
+        <select name="skill_type" required>
+            <option value="Offer">Offer</option>
+            <option value="Want">Want</option>
+        </select>
+
+        <button type="submit">Add Skill</button>
+    </form>
+
+    <br>
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

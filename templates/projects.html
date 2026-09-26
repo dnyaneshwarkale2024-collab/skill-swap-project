@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Practice Projects</h1>
+    <p>Apply your skills with hands-on projects and build your portfolio.</p>
+
+    <div class="hero-buttons">
+        <a href="{{ url_for('add_project') }}" class="btn">
+            <i class="fas fa-plus"></i> Add Project
+        </a>
+    </div>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- FILTERS -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="difficulty-filter">Difficulty:</label>
+            <select id="difficulty-filter">
+                <option value="">All Levels</option>
+                {% for level in difficulty_levels %}
+                <option value="{{ level }}">{{ level.title() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- PROJECTS GRID -->
+    <section class="projects-section">
+        <div class="grid">
+            {% for project in projects %}
+            <div class="card project-card" data-category="{{ project.category }}" data-difficulty="{{ project.difficulty_level }}">
+                <div class="card-header">
+                    <h3>{{ project.title }}</h3>
+                    <span class="creator">by {{ project.created_by_name }}</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ project.description | truncate(120) }}</p>
+                    <div class="project-meta">
+                        <span class="category">{{ project.category }}</span>
+                        <span class="difficulty difficulty-{{ project.difficulty_level }}">
+                            {{ project.difficulty_level.title() }}
+                        </span>
+                        {% if project.estimated_time %}
+                        <span class="time"><i class="fas fa-clock"></i> {{ project.estimated_time }}h</span>
+                        {% endif %}
+                    </div>
+                    {% if project.requirements %}
+                    <div class="requirements">
+                        <strong>Requirements:</strong>
+                        <p>{{ project.requirements | truncate(100) }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    {% if project.solution_url %}
+                    <a href="{{ project.solution_url }}" target="_blank" class="btn btn-sm">
+                        <i class="fas fa-eye"></i> View Solution
+                    </a>
+                    {% endif %}
+                    <span class="project-date">{{ project.created_at.strftime('%B %Y') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not projects %}
+        <div class="empty-state">
+            <i class="fas fa-project-diagram"></i>
+            <h3>No projects available yet</h3>
+            <p>Create practice projects to help others learn and build their skills!</p>
+            <a href="{{ url_for('add_project') }}" class="btn">Add First Project</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+// Filter functionality
+document.getElementById('category-filter').addEventListener('change', filterProjects);
+document.getElementById('difficulty-filter').addEventListener('change', filterProjects);
+
+function filterProjects() {
+    const selectedCategory = document.getElementById('category-filter').value;
+    const selectedDifficulty = document.getElementById('difficulty-filter').value;
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        const categoryMatch = !selectedCategory || card.dataset.category === selectedCategory;
+        const difficultyMatch = !selectedDifficulty || card.dataset.difficulty === selectedDifficulty;
+
+        if (categoryMatch && difficultyMatch) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+
+</body>
+</html>

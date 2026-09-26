@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project | SkillSwap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillSwap</div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Learn <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('study_materials') }}">Study Materials</a>
+                <a href="{{ url_for('live_lectures') }}">Live Lectures</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+        </div>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<!-- FORM SECTION -->
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="fas fa-project-diagram"></i> Add Practice Project</h1>
+            <p>Create a hands-on project for learners to practice and build their skills.</p>
+        </div>
+
+        <form method="POST" class="form">
+            <div class="form-group">
+                <label for="title">Project Title *</label>
+                <input type="text" id="title" name="title" required
+                       placeholder="Enter project title">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Project Description *</label>
+                <textarea id="description" name="description" rows="4" required
+                          placeholder="Describe the project and what learners will build"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile Development">Mobile Development</option>
+                        <option value="Design">Design</option>
+                        <option value="Business">Business</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Language">Language</option>
+                        <option value="Science">Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty_level">Difficulty Level *</label>
+                    <select id="difficulty_level" name="difficulty_level" required>
+                        <option value="">Select difficulty</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="estimated_time">Estimated Time (hours)</label>
+                    <input type="number" id="estimated_time" name="estimated_time" min="1" max="500"
+                           placeholder="10">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="requirements">Requirements *</label>
+                <textarea id="requirements" name="requirements" rows="3" required
+                          placeholder="What skills, tools, or prerequisites are needed?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="solution_url">Solution/Reference URL (optional)</label>
+                <input type="url" id="solution_url" name="solution_url"
+                       placeholder="https://github.com/... or reference link">
+                <small class="form-help">Link to solution code, tutorial, or reference materials</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i> Add Project
+                </button>
+                <a href="{{ url_for('projects') }}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

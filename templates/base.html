@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skill Swap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">SkillSwap</div>
+
+    <div class="nav-links">
+    {% if 'user_id' not in session %}
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+    {% else %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/skills">Skills</a>
+        <a href="/matches">Matches</a>
+        <a href="/requests">Requests</a>
+        <a href="/feedback">Feedback</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    {% endif %}
+</div>
+</nav>
+
+<div id="flash-container" role="status" aria-live="polite" aria-atomic="true">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message flash-success" role="alert">
+                    <span class="flash-text">{{ message }}</span>
+                    <span class="close-btn" aria-label="Close notification">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashItems = document.querySelectorAll('#flash-container .flash-message');
+
+        if (flashItems.length > 0) {
+            // Ensure flash container is visible when messages exist
+            document.getElementById('flash-container').style.display = 'block';
+        }
+
+        flashItems.forEach(function (item) {
+            const closeButton = item.querySelector('.close-btn');
+
+            function dismissFlash() {
+                if (!item.classList.contains('hide')) {
+                    item.classList.add('hide');
+                    setTimeout(function () {
+                        if (item.parentNode) item.parentNode.removeChild(item);
+                        if (document.querySelectorAll('#flash-container .flash-message').length === 0) {
+                            document.getElementById('flash-container').style.display = 'none';
+                        }
+                    }, 350);
+                }
+            }
+
+            if (closeButton) {
+                closeButton.addEventListener('click', dismissFlash);
+            }
+
+            setTimeout(dismissFlash, 5000);
+        });
+    });
+</script>
+
+</body>
+</html>

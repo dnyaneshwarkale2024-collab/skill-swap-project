@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Skills</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h2>SkillSwap</h2>
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/profile">Profile</a>
+        <a href="/matches">Matches</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>My Skills</h2>
+
+    <a class="btn" href="/add-skill" target="_blank">➕ Add Skill</a>
+
+    <div class="grid">
+        <!-- OFFER SKILLS -->
+        <div class="card">
+            <h3>Skills I Offer</h3>
+            <ul>
+                {% for s in skills %}
+                    {% if s.skill_type == "Offer" %}
+                        <li>{{ s.skill_name }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- WANT SKILLS -->
+        <div class="card">
+            <h3>Skills I Want</h3>
+            <ul>
+                {% for s in skills %}
+                    {% if s.skill_type == "Want" %}
+                        <li>{{ s.skill_name }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
